@@ -65,7 +65,7 @@ The next surface is a reusable TypeScript package. This comes before the
 playground so TypeScript application development, playground work, docs
 examples, and future editor/webview integrations all share one boundary.
 
-Implemented first slice:
+Implemented stable `0.1.0` package slice:
 
 - `crates/rx-wasm` exists as a thin command wrapper over `rx-core`.
 - `packages/rx` exists as the TypeScript facade over `rx-wasm`.
@@ -78,14 +78,16 @@ Implemented first slice:
   Rust/WASM.
 - The package builds separate browser/bundler and Node/Bun WASM targets so
   Node and Bun avoid experimental WASM module imports and can use sync APIs.
+- Vitest covers Rust-backed WASM commands on the Node/Bun target.
+- `docs/npm-release.md` records npm preflight, tarball smoke, publish, and
+  post-publish checks.
 
 Remaining package work:
 
 - Add JSON-compatible AST transport once TS needs to preserve richer builder
   metadata than readable rx strings can express.
 - Add fuller browser bundler, Node, and Bun examples.
-- Add Vitest coverage that runs the generated WASM commands, not just builder
-  serialization.
+- Add browser-runner coverage for the browser/bundler WASM output.
 - Defer a NAPI package until Node-heavy usage justifies it and the universal API
   shape is stable.
 

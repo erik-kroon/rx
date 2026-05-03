@@ -38,12 +38,14 @@ console.log(toRegexSync(pathPiece)); // [A-Za-z0-9/]+
 ## Commands
 
 ```ts
-import { emitRx, explainRegex, lintRegex, parseRegex } from "@rx-lang/rx";
+import { emitRx, explainRegex, formatRx, lintRegex, parseRegex, toRegex } from "@rx-lang/rx";
 
 await emitRx('one_or_more(set(ascii.alnum, chars("._/-")))');
 await explainRegex("[A-Za-z0-9._/-]+");
+await formatRx('one_or_more(set(ascii.alnum,chars("._/-")))');
 await lintRegex("[\\w\\._/-]+");
 await parseRegex("[A-Za-z0-9._/-]+");
+await toRegex(pathPiece);
 ```
 
 All command results are diagnostic-first:
@@ -56,6 +58,36 @@ type CommandResult = {
   diagnostics: RxDiagnostic[];
 };
 ```
+
+Node and Bun also expose sync command variants from `@rx-lang/rx/node`:
+
+```ts
+import {
+  emitRxSync,
+  explainRegexSync,
+  formatRxSync,
+  lintRegexSync,
+  parseRegexSync,
+  toRegexSync,
+} from "@rx-lang/rx/node";
+```
+
+## Stable API
+
+The `0.1.x` TypeScript API is:
+
+- Builders: `rx.literal`, `rx.char`, `rx.chars`, `rx.range`, `rx.set`,
+  `rx.oneOf`, `rx.sequence`, `rx.either`, `rx.zeroOrMore`, `rx.oneOrMore`,
+  `rx.optional`, `rx.repeat`, `rx.repeatBetween`, `rx.startText`, `rx.endText`,
+  `rx.capture`, `rx.namedCapture`.
+- ASCII set helpers: `rx.asciiWord`, `rx.alphaNumeric`, `rx.asciiAlpha`,
+  `rx.digit`, `rx.whitespace`.
+- Async commands: `emitRx`, `explainRegex`, `formatRx`, `lintRegex`,
+  `parseRegex`, `toRegex`.
+- Node/Bun sync commands: `emitRxSync`, `explainRegexSync`, `formatRxSync`,
+  `lintRegexSync`, `parseRegexSync`, `toRegexSync`.
+- Types: `CommandResult`, `RxDiagnostic`, `EmitOptions`, `Dialect`,
+  `RxPattern`, `RxError`, `SetItem`, `Span`.
 
 ## Build
 

@@ -139,9 +139,9 @@ rx emit 'named_capture("id", one_or_more(set(ascii.digit)))' --dialect rust-rege
 exist as limited compatibility targets, primarily to exercise explicit
 unsupported-feature diagnostics.
 
-## TypeScript Alpha
+## TypeScript
 
-The `packages/rx` workspace package provides the first TypeScript facade backed
+The `packages/rx` workspace package provides the TypeScript facade backed
 by the Rust core compiled to WASM:
 
 ```ts
@@ -245,6 +245,7 @@ The crates.io package names for the library crates are `rx-lang`,
 - [docs/adr/0004-wasm-typescript-distribution.md](docs/adr/0004-wasm-typescript-distribution.md) records the WASM-first TypeScript/npm distribution direction.
 - [docs/agents/workflow.md](docs/agents/workflow.md) records agent workflow and work tracking conventions.
 - [docs/release.md](docs/release.md) records the Rust crates.io release checklist.
+- [docs/npm-release.md](docs/npm-release.md) records the `@rx-lang/rx` npm release checklist.
 
 ## Development
 
