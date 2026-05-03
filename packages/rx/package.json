@@ -1,10 +1,13 @@
 {
   "name": "@rx-lang/rx",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TypeScript facade for rx readable regex backed by Rust WASM internals",
   "type": "module",
   "license": "MIT OR Apache-2.0",
-  "repository": "github:erik-kroon/rx",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erik-kroon/rx.git"
+  },
   "sideEffects": false,
   "files": [
     "dist",
@@ -51,7 +54,7 @@
   },
   "scripts": {
     "build": "pnpm check:deps && pnpm build:wasm && pnpm build:ts",
-    "build:ts": "tsup src/index.ts src/node.ts src/builders.ts --format esm --dts",
+    "build:ts": "rm -rf dist && tsup src/index.ts src/node.ts src/builders.ts --format esm --dts",
     "build:wasm": "pnpm build:wasm:browser && pnpm build:wasm:node",
     "build:wasm:browser": "PATH=\"$HOME/.cargo/bin:$PATH\" wasm-pack build ../../crates/rx-wasm --target bundler --out-dir ../../packages/rx/wasm --out-name rx_wasm",
     "build:wasm:node": "PATH=\"$HOME/.cargo/bin:$PATH\" wasm-pack build ../../crates/rx-wasm --target nodejs --out-dir ../../packages/rx/wasm-node --out-name rx_wasm",
