@@ -63,8 +63,13 @@ Confirm npm authentication and package access:
 
 ```sh
 npm whoami
-npm access ls-packages
+npm org ls rx-lang
+npm access list packages rx-lang --json
 ```
+
+For the first publish, the `rx-lang` npm organization must already exist and
+the publishing account must be a member with publish permission. A missing scope
+fails with `E404 Scope not found` before npm can create `@rx-lang/rx`.
 
 Publish the scoped public package:
 
