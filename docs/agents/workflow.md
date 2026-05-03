@@ -4,6 +4,7 @@
 
 - Start with [AGENTS.md](../../AGENTS.md) for repo-local operating guidance.
 - Use [CONTEXT.md](../../CONTEXT.md) for domain language, product surfaces, and MVP boundaries.
+- Use [docs/roadmap.md](../roadmap.md) for the current milestone baseline and next delivery sequence.
 - Use [docs/adr](../adr) for durable architecture decisions.
 - Treat `.context/attachments/pasted_text_2026-05-03_11-28-52.txt` as the current full PRD when available in this workspace.
 
@@ -20,6 +21,7 @@ GitHub issues are available for product planning. The initial end-state PRD is t
 - Keep local handoff notes in `.context/`.
 - Record durable product or architecture decisions as ADRs.
 - Use GitHub issues for PRDs and planned implementation work when a tracker entry is useful.
+- Treat issues #2 through #13 as covered by the `0.1.0` kernel baseline unless a future comment or reopened issue narrows them into follow-up work.
 - Do not invent labels, states, or milestone names in committed docs until the repo establishes them.
 
 ## Verification Expectations

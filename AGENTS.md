@@ -16,6 +16,7 @@ This repo is the `rx` project: a Rust-native readable regex compiler and toolcha
 - Use explicit ASCII and Unicode namespaces in public API names.
 - Keep generated regex output standard, compact, and usable by existing engines.
 - Organize docs by user goals: unreadable regex, readable rx, generated regex, and plain-English explanation.
+- For JavaScript/TypeScript distribution, keep Rust as the correctness boundary: use WASM-first command APIs plus a TypeScript-native facade, not a TS reimplementation or raw generated bindings as the public surface.
 
 ## Before Implementing
 
@@ -23,4 +24,3 @@ This repo is the `rx` project: a Rust-native readable regex compiler and toolcha
 2. Check [docs/adr](docs/adr) for accepted decisions before changing architecture.
 3. If adding a new major product surface, add or update an ADR.
 4. If adding tracker or triage conventions, record them in [docs/agents/workflow.md](docs/agents/workflow.md).
-

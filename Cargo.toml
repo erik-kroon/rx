@@ -1,7 +1,9 @@
 [workspace]
 members = [
     "crates/rx",
+    "crates/rx-cli",
     "crates/rx-core",
+    "crates/rx-macros",
 ]
 resolver = "2"
 
@@ -9,3 +11,4 @@ resolver = "2"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/erik-kroon/rx"
+readme = "README.md"

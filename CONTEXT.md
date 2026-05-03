@@ -38,12 +38,13 @@ The PRD recommends this eventual layout:
 - `rx-lsp`: editor integration.
 - `rx-wasm`: web playground support.
 - `rx-regex`: Rust regex engine integration.
+- `packages/rx`: future TypeScript/npm facade backed by `rx-wasm`.
 
 ## Domain Rules
 
 - Generate standard regex strings that work with existing engines.
 - Keep generated output compact, not mechanically expanded.
-- Keep the default safe core regular: literals, character classes, ranges, sequences, alternatives, groups, captures, quantifiers, anchors, boundaries, and flags.
+- Keep the default safe core regular: literals, character classes, ranges, sequences, alternatives, groups, captures, quantifiers, and anchors. Boundaries and flags are regular-language concepts, but they are post-0.1 work unless the roadmap says otherwise.
 - Treat backreferences, lookbehind, recursive regex, conditionals, and engine-specific tricks as compatibility features, not safe-core features.
 - Dialect-specific unsupported features should fail with structured, actionable errors.
 - Builder overhead should happen before matching, not during matching.
@@ -104,3 +105,24 @@ The first useful product should include:
 - Pretty-printer.
 - Basic CLI explain and emit.
 - Basic legacy regex parser.
+
+## Current Baseline
+
+The current `0.1.0` kernel baseline is tracked in
+[docs/roadmap.md](docs/roadmap.md). Treat the original implementation slices
+#2 through #13 as covered by that baseline when planning new work.
+
+Remaining near-term work should harden the kernel before adding new product
+surfaces:
+
+- Boundaries and flags are post-0.1 unless they receive a dedicated implementation slice.
+- Rust regex is the only fully supported `0.1.0` dialect. Other dialect selectors may exist only for explicit compatibility failures covered by tests.
+- Tighten dialect support tests before documenting any additional fully supported target.
+- Keep diagnostics centralized so CLI, macro, migration, playground, and editor
+  surfaces render the same categories and source spans.
+- Keep playground and editor integration after the core language, diagnostics,
+  and migration contracts are stable.
+- For JavaScript/TypeScript distribution, follow
+  [ADR 0004](docs/adr/0004-wasm-typescript-distribution.md): Rust core owns
+  correctness, WASM exposes command-shaped functions, and TypeScript owns the
+  ergonomic facade.
