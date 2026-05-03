@@ -1,10 +1,27 @@
 # @rx-lang/rx
 
-TypeScript facade for `rx`, backed by the Rust core compiled to WASM.
+Readable regex for TypeScript, backed by Rust internals compiled to WASM.
 
-The package keeps the TypeScript surface ergonomic while Rust remains the source
-of truth for validation, diagnostics, formatting, explanation, and regex
-emission.
+Use `rx` to build, inspect, format, lint, and emit regular expressions without
+hand-writing dense regex strings. The TypeScript API is ergonomic, while the
+Rust core remains the source of truth for validation, diagnostics, formatting,
+explanation, and regex emission.
+
+## Install
+
+```sh
+pnpm add @rx-lang/rx
+```
+
+```sh
+npm install @rx-lang/rx
+```
+
+```sh
+bun add @rx-lang/rx
+```
+
+## Quick Start
 
 ```ts
 import { rx, toRegex } from "@rx-lang/rx";
@@ -23,9 +40,12 @@ console.log(pathPiece.toRx());
 console.log(await toRegex(pathPiece)); // [A-Za-z0-9/._-]+
 ```
 
+## Node and Bun
+
 Node and Bun get a dedicated build automatically through package export
-conditions. It loads WASM through the synchronous `wasm-pack` Node target
-instead of experimental WASM module imports:
+conditions. They can also import `@rx-lang/rx/node` directly for sync command
+APIs. This path loads WASM through the synchronous `wasm-pack` Node target
+instead of experimental WASM module imports.
 
 ```ts
 import { rx, toRegexSync } from "@rx-lang/rx/node";
@@ -91,11 +111,15 @@ The `0.1.x` TypeScript API is:
 
 ## Build
 
-This package expects `wasm-pack` and the Rust `wasm32-unknown-unknown` target:
+Consumers do not need Rust or `wasm-pack`; the published package includes built
+WASM for browser/bundler and Node/Bun targets.
+
+Repository development expects package dependencies, `wasm-pack`, and the Rust
+`wasm32-unknown-unknown` target:
 
 ```sh
 rustup target add wasm32-unknown-unknown
 cargo install wasm-pack
-pnpm install
+pnpm install --frozen-lockfile
 pnpm build
 ```
