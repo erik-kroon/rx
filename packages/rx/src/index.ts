@@ -62,10 +62,7 @@ export async function toRegex(input: string | RxPattern, options?: EmitOptions):
 
 async function loadWasm(): Promise<WasmModule> {
   const moduleUrl = new URL("../wasm/rx_wasm.js", import.meta.url).href;
-  const dynamicImport = new Function("specifier", "return import(specifier)") as (
-    specifier: string,
-  ) => Promise<unknown>;
-  wasmModule ??= dynamicImport(moduleUrl).then(async (module) => {
+  wasmModule ??= import(/* @vite-ignore */ moduleUrl).then(async (module) => {
     const wasm = module as WasmModule;
     await wasm.default?.();
     return wasm;
