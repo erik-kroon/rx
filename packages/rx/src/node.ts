@@ -1,7 +1,7 @@
 import { createRequire } from "node:module";
 
 import type { CommandResult, EmitOptions } from "./builders";
-import { RxError, RxPattern, rx } from "./builders";
+import { createRxBuilder, RxError, RxPattern } from "./builders";
 
 export type {
   CommandResult,
@@ -12,7 +12,7 @@ export type {
   SetItem,
   Span,
 } from "./builders";
-export { RxError, RxPattern, rx };
+export { createRxBuilder, RxError, RxPattern };
 
 interface NodeWasmModule {
   emitRx: (input: string, options?: EmitOptions) => CommandResult;
@@ -26,6 +26,59 @@ const require = createRequire(import.meta.url);
 const wasm = require("../wasm-node/rx_wasm.js") as NodeWasmModule;
 
 export async function initRx(): Promise<void> {}
+
+export const rx = Object.assign(createRxBuilder(), {
+  emitRx,
+  emitRxSync,
+  explainRegex,
+  explainRegexSync,
+  formatRx,
+  formatRxSync,
+  lintRegex,
+  lintRegexSync,
+  parseRegex,
+  parseRegexSync,
+  toRegex,
+  toRegexSync,
+});
+
+export interface CreatedRx {
+  rx: typeof rx;
+  emitRx: typeof emitRx;
+  emitRxSync: typeof emitRxSync;
+  explainRegex: typeof explainRegex;
+  explainRegexSync: typeof explainRegexSync;
+  formatRx: typeof formatRx;
+  formatRxSync: typeof formatRxSync;
+  lintRegex: typeof lintRegex;
+  lintRegexSync: typeof lintRegexSync;
+  parseRegex: typeof parseRegex;
+  parseRegexSync: typeof parseRegexSync;
+  toRegex: typeof toRegex;
+  toRegexSync: typeof toRegexSync;
+}
+
+export function createRxSync(): CreatedRx {
+  return {
+    rx,
+    emitRx,
+    emitRxSync,
+    explainRegex,
+    explainRegexSync,
+    formatRx,
+    formatRxSync,
+    lintRegex,
+    lintRegexSync,
+    parseRegex,
+    parseRegexSync,
+    toRegex,
+    toRegexSync,
+  };
+}
+
+export async function createRx(): Promise<CreatedRx> {
+  return createRxSync();
+}
 
 export function emitRxSync(input: string | RxPattern, options?: EmitOptions): CommandResult {
   return wasm.emitRx(typeof input === "string" ? input : input.toRx(), options);

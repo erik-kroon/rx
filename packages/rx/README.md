@@ -3,9 +3,10 @@
 Readable regex for TypeScript, backed by Rust internals compiled to WASM.
 
 Use `rx` to build, inspect, format, lint, and emit regular expressions without
-hand-writing dense regex strings. The TypeScript API is ergonomic, while the
-Rust core remains the source of truth for validation, diagnostics, formatting,
-explanation, and regex emission.
+hand-writing dense regex strings. The builder API is synchronous TypeScript, so
+common authoring does not need WASM initialization. The Rust core powers raw
+regex parsing, linting, formatting, explanation, migration, and validated
+emission through WASM commands.
 
 ## Install
 
@@ -24,20 +25,20 @@ bun add @rx-lang/rx
 ## Quick Start
 
 ```ts
-import { rx, toRegex } from "@rx-lang/rx";
+import { rx } from "@rx-lang/rx";
 
+const pathPiece = rx.set(rx.ascii.alnum, "._/-").oneOrMore();
+
+console.log(pathPiece.toReadable());
+console.log(pathPiece.toRegex()); // [A-Za-z0-9._/-]+
+```
+
+The older functional builder style stays supported:
+
+```ts
 const pathPiece = rx.oneOrMore(
-  rx.oneOf(
-    rx.alphaNumeric(),
-    rx.char("/"),
-    rx.char("."),
-    rx.char("-"),
-    rx.char("_"),
-  ),
+  rx.oneOf(rx.alphaNumeric(), rx.char("/"), rx.char("."), rx.char("-"), rx.char("_")),
 );
-
-console.log(pathPiece.toRx());
-console.log(await toRegex(pathPiece)); // [A-Za-z0-9/._-]+
 ```
 
 ## Node and Bun
@@ -48,24 +49,24 @@ APIs. This path loads WASM through the synchronous `wasm-pack` Node target
 instead of experimental WASM module imports.
 
 ```ts
-import { rx, toRegexSync } from "@rx-lang/rx/node";
+import { rx } from "@rx-lang/rx/node";
 
-const pathPiece = rx.oneOrMore(rx.oneOf(rx.alphaNumeric(), rx.char("/")));
+const pathPiece = rx.set(rx.ascii.alnum, "/").oneOrMore();
 
-console.log(toRegexSync(pathPiece)); // [A-Za-z0-9/]+
+console.log(pathPiece.toRegex()); // [A-Za-z0-9/]+
+console.log(rx.toRegexSync(pathPiece)); // [A-Za-z0-9/]+
 ```
 
 ## Commands
 
 ```ts
-import { emitRx, explainRegex, formatRx, lintRegex, parseRegex, toRegex } from "@rx-lang/rx";
+import { rx } from "@rx-lang/rx";
 
-await emitRx('one_or_more(set(ascii.alnum, chars("._/-")))');
-await explainRegex("[A-Za-z0-9._/-]+");
-await formatRx('one_or_more(set(ascii.alnum,chars("._/-")))');
-await lintRegex("[\\w\\._/-]+");
-await parseRegex("[A-Za-z0-9._/-]+");
-await toRegex(pathPiece);
+await rx.emitRx('one_or_more(set(ascii.alnum, chars("._/-")))');
+await rx.explainRegex("[A-Za-z0-9._/-]+");
+await rx.formatRx('one_or_more(set(ascii.alnum,chars("._/-")))');
+await rx.lintRegex("[\\w\\._/-]+");
+await rx.parseRegex("[A-Za-z0-9._/-]+");
 ```
 
 All command results are diagnostic-first:
@@ -97,15 +98,21 @@ import {
 The `0.1.x` TypeScript API is:
 
 - Builders: `rx.literal`, `rx.char`, `rx.chars`, `rx.range`, `rx.set`,
-  `rx.oneOf`, `rx.sequence`, `rx.either`, `rx.zeroOrMore`, `rx.oneOrMore`,
+  `rx.oneOf`, `rx.seq`, `rx.sequence`, `rx.either`, `rx.zeroOrMore`, `rx.oneOrMore`,
   `rx.optional`, `rx.repeat`, `rx.repeatBetween`, `rx.startText`, `rx.endText`,
   `rx.capture`, `rx.namedCapture`.
+- Fluent pattern methods: `pattern.zeroOrMore`, `pattern.oneOrMore`,
+  `pattern.optional`, `pattern.repeat`, `pattern.repeatBetween`,
+  `pattern.toReadable`, `pattern.toRegex`, `pattern.toJson`,
+  `pattern.toRegExp`.
 - ASCII set helpers: `rx.asciiWord`, `rx.alphaNumeric`, `rx.asciiAlpha`,
-  `rx.digit`, `rx.whitespace`.
+  `rx.digit`, `rx.whitespace`, plus `rx.ascii.word`, `rx.ascii.alnum`,
+  `rx.ascii.alpha`, `rx.ascii.digit`, and `rx.ascii.whitespace`.
 - Async commands: `emitRx`, `explainRegex`, `formatRx`, `lintRegex`,
-  `parseRegex`, `toRegex`.
+  `parseRegex`, `toRegex`, plus the same command methods on `rx`.
 - Node/Bun sync commands: `emitRxSync`, `explainRegexSync`, `formatRxSync`,
-  `lintRegexSync`, `parseRegexSync`, `toRegexSync`.
+  `lintRegexSync`, `parseRegexSync`, `toRegexSync`, plus the same sync command
+  methods on `rx` from `@rx-lang/rx/node`.
 - Types: `CommandResult`, `RxDiagnostic`, `EmitOptions`, `Dialect`,
   `RxPattern`, `RxError`, `SetItem`, `Span`.
 

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  createRx,
+  createRxSync,
   emitRx,
   emitRxSync,
   explainRegex,
@@ -29,6 +31,20 @@ function pathPiece() {
 }
 
 describe("Node and Bun WASM commands", () => {
+  it("creates a fluent rx API after WASM initialization", async () => {
+    const { rx } = await createRx();
+    const pathPiece = rx.set(rx.ascii.alnum, "._/-").oneOrMore();
+
+    expect(pathPiece.toRegex()).toBe("[A-Za-z0-9._/-]+");
+    expect(pathPiece.toReadable()).toContain("one_or_more");
+  });
+
+  it("creates a fluent rx API synchronously", () => {
+    const { rx } = createRxSync();
+
+    expect(rx.set(rx.ascii.alnum, "/").oneOrMore().toRegex()).toBe("[A-Za-z0-9/]+");
+  });
+
   it("emits regex synchronously from TypeScript builders through Rust", () => {
     expect(toRegexSync(pathPiece())).toBe("[A-Za-z0-9/._-]+");
   });
@@ -107,5 +123,13 @@ describe("Node and Bun WASM commands", () => {
     const result = lintRegexSync("[\\w\\._/-]+");
 
     expect(result.diagnostics.map((diagnostic) => diagnostic.category)).toContain("lint");
+  });
+
+  it("exposes WASM commands on the rx namespace", async () => {
+    await expect(rx.explainRegex("[A-Za-z0-9/]+")).resolves.toMatchObject({
+      regex: "[A-Za-z0-9/]+",
+      diagnostics: [],
+    });
+    expect(rx.toRegexSync(rx.set(rx.ascii.alnum, "/").oneOrMore())).toBe("[A-Za-z0-9/]+");
   });
 });

@@ -1,5 +1,5 @@
 import type { CommandResult, EmitOptions } from "./builders";
-import { RxError, RxPattern, rx } from "./builders";
+import { createRxBuilder, RxError, RxPattern } from "./builders";
 
 export type {
   CommandResult,
@@ -10,7 +10,7 @@ export type {
   SetItem,
   Span,
 } from "./builders";
-export { RxError, RxPattern, rx };
+export { createRxBuilder, RxError, RxPattern };
 
 interface WasmModule {
   default?: () => Promise<void>;
@@ -23,8 +23,40 @@ interface WasmModule {
 
 let wasmModule: Promise<WasmModule> | undefined;
 
+export const rx = Object.assign(createRxBuilder(), {
+  emitRx,
+  explainRegex,
+  formatRx,
+  lintRegex,
+  parseRegex,
+  toRegex,
+});
+
 export async function initRx(): Promise<void> {
   await loadWasm();
+}
+
+export interface CreatedRx {
+  rx: typeof rx;
+  emitRx: typeof emitRx;
+  explainRegex: typeof explainRegex;
+  formatRx: typeof formatRx;
+  lintRegex: typeof lintRegex;
+  parseRegex: typeof parseRegex;
+  toRegex: typeof toRegex;
+}
+
+export async function createRx(): Promise<CreatedRx> {
+  const wasm = await loadWasm();
+  return {
+    rx,
+    emitRx,
+    explainRegex,
+    formatRx,
+    lintRegex,
+    parseRegex,
+    toRegex,
+  };
 }
 
 export async function emitRx(input: string | RxPattern, options?: EmitOptions): Promise<CommandResult> {

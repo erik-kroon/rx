@@ -141,23 +141,24 @@ unsupported-feature diagnostics.
 
 ## TypeScript
 
-The `packages/rx` workspace package provides the TypeScript facade backed
-by the Rust core compiled to WASM:
+The `@rx-lang/rx` package provides a synchronous TypeScript builder facade plus
+Rust/WASM commands for raw-regex parsing, linting, formatting, explanation, and
+validated emission:
 
 ```ts
-import { rx, toRegex } from "@rx-lang/rx";
+import { rx } from "@rx-lang/rx";
 
+const pathPiece = rx.set(rx.ascii.alnum, "._/-").oneOrMore();
+
+console.log(pathPiece.toRegex()); // [A-Za-z0-9._/-]+
+```
+
+The older functional builder style remains supported:
+
+```ts
 const pathPiece = rx.oneOrMore(
-  rx.oneOf(
-    rx.alphaNumeric(),
-    rx.char("/"),
-    rx.char("."),
-    rx.char("-"),
-    rx.char("_"),
-  ),
+    rx.oneOf(rx.alphaNumeric(), rx.char("/"), rx.char("."), rx.char("-"), rx.char("_")),
 );
-
-console.log(await toRegex(pathPiece)); // [A-Za-z0-9/._-]+
 ```
 
 Node and Bun use a dedicated package export that loads the Rust WASM through the
@@ -220,7 +221,7 @@ Deferred beyond `0.1.0`:
 - Full dialect support beyond Rust regex.
 - Full legacy regex compatibility representation.
 - LSP/editor integration.
-- Stable npm publishing, Node-native acceleration, and playground surfaces.
+- Native Node acceleration and playground surfaces.
 
 ## Crates
 
