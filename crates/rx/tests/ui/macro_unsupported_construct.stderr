@@ -1,0 +1,10 @@
+error: invalid rx macro input at byte 13: unsupported construct `boundary_word` in MVP macro DSL
+ --> tests/ui/macro_unsupported_construct.rs:2:13
+  |
+2 |       let _ = rx::pattern! {
+  |  _____________^
+3 | |         boundary_word
+4 | |     };
+  | |_____^
+  |
+  = note: this error originates in the macro `rx::pattern` (in Nightly builds, run with -Z macro-backtrace for more info)

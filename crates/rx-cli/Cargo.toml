@@ -1,0 +1,15 @@
+[package]
+name = "rx-cli"
+version = "0.1.0"
+description = "Command-line interface for explaining, checking, converting, and emitting rx readable regex patterns."
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "../../README.md"
+
+[[bin]]
+name = "rx"
+path = "src/main.rs"
+
+[dependencies]
+rx = { package = "rx-lang", version = "0.1.0", path = "../rx" }

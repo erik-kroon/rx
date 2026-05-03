@@ -1,0 +1,10 @@
+error: invalid rx macro input at byte 30: malformed syntax: expected `)`
+ --> tests/ui/macro_malformed_syntax.rs:2:13
+  |
+2 |       let _ = rx::pattern! {
+  |  _____________^
+3 | |         one_or_more(set(ascii::alnum) literal("x"))
+4 | |     };
+  | |_____^
+  |
+  = note: this error originates in the macro `rx::pattern` (in Nightly builds, run with -Z macro-backtrace for more info)

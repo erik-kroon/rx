@@ -1,9 +1,19 @@
 [package]
-name = "rx"
+name = "rx-lang"
 version = "0.1.0"
+description = "Readable regex builders, macros, parsing, diagnostics, and CLI-facing APIs."
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
+readme = "../../README.md"
+
+[lib]
+name = "rx"
+path = "src/lib.rs"
 
 [dependencies]
-rx-core = { path = "../rx-core" }
+rx-core = { package = "rx-lang-core", version = "0.1.0", path = "../rx-core" }
+rx-macros = { package = "rx-lang-macros", version = "0.1.0", path = "../rx-macros" }
+
+[dev-dependencies]
+trybuild = "1"

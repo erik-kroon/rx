@@ -19,8 +19,10 @@ Initial implementation should prioritize the safe regular-language core:
 - Sequences and alternatives.
 - Groups and captures.
 - Quantifiers.
-- Anchors and boundaries.
-- Flags.
+- Anchors.
+
+Boundaries and flags remain part of the end-state safe-core language, but they
+are post-0.1 work until modeled and tested explicitly.
 
 Compatibility-only features such as backreferences, lookbehind, recursive patterns, conditionals, and engine-specific escapes may be represented later, but they must be explicit and dialect-gated.
 

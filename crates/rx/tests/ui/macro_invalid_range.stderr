@@ -1,0 +1,10 @@
+error: invalid rx pattern: range start 'z' is greater than end 'a'
+ --> tests/ui/macro_invalid_range.rs:2:13
+  |
+2 |       let _ = rx::pattern! {
+  |  _____________^
+3 | |         set(range("z", "a"))
+4 | |     };
+  | |_____^
+  |
+  = note: this error originates in the macro `rx::pattern` (in Nightly builds, run with -Z macro-backtrace for more info)

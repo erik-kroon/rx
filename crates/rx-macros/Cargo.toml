@@ -1,0 +1,15 @@
+[package]
+name = "rx-lang-macros"
+version = "0.1.0"
+description = "Procedural macros for compile-time readable regex construction with rx."
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "../../README.md"
+
+[lib]
+name = "rx_macros"
+proc-macro = true
+
+[dependencies]
+rx-core = { package = "rx-lang-core", version = "0.1.0", path = "../rx-core" }

@@ -1,0 +1,10 @@
+error: invalid capture name "123-id": capture names must start with a letter or underscore and contain only letters, digits, or underscore
+ --> tests/ui/macro_invalid_capture_name.rs:2:13
+  |
+2 |       let _ = rx::pattern! {
+  |  _____________^
+3 | |         named_capture("123-id", one_or_more(set(ascii::digit)))
+4 | |     };
+  | |_____^
+  |
+  = note: this error originates in the macro `rx::pattern` (in Nightly builds, run with -Z macro-backtrace for more info)
