@@ -23,6 +23,7 @@ The differentiating workflow is:
 - Rust macro DSL for static readable patterns.
 - `.rx` files for readable pattern definitions outside Rust source.
 - CLI for explain, lint, emit, convert, test, and migrate workflows.
+- TypeScript/npm facade backed by Rust WASM for JS/TS development.
 - LSP/editor integration for hover explanations, diagnostics, and code actions.
 - Web playground powered by the same core.
 
@@ -36,9 +37,9 @@ The PRD recommends this eventual layout:
 - `rx-parser`: legacy regex, `.rx`, and macro-style syntax parsing.
 - `rx-cli`: command-line workflows.
 - `rx-lsp`: editor integration.
-- `rx-wasm`: web playground support.
+- `rx-wasm`: WASM command wrapper for TypeScript and web surfaces.
 - `rx-regex`: Rust regex engine integration.
-- `packages/rx`: future TypeScript/npm facade backed by `rx-wasm`.
+- `packages/rx`: TypeScript/npm facade backed by `rx-wasm`.
 
 ## Domain Rules
 
@@ -120,9 +121,16 @@ surfaces:
 - Tighten dialect support tests before documenting any additional fully supported target.
 - Keep diagnostics centralized so CLI, macro, migration, playground, and editor
   surfaces render the same categories and source spans.
-- Keep playground and editor integration after the core language, diagnostics,
-  and migration contracts are stable.
+- Pull the TypeScript/npm package ahead of playground work when the goal is
+  using `rx` in TypeScript development. The playground should consume that
+  package boundary instead of growing its own WASM wrapper.
 - For JavaScript/TypeScript distribution, follow
   [ADR 0004](docs/adr/0004-wasm-typescript-distribution.md): Rust core owns
   correctness, WASM exposes command-shaped functions, and TypeScript owns the
   ergonomic facade.
+- The initial TypeScript facade may serialize builders through readable rx
+  strings; move to JSON-compatible AST transport when TypeScript workflows need
+  richer metadata or lower overhead across the WASM boundary.
+- Treat Node and Bun as first-class TypeScript development targets. Keep a
+  dedicated Node/Bun WASM build path available instead of forcing those runtimes
+  through browser/bundler-only WASM loading.

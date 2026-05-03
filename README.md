@@ -139,6 +139,50 @@ rx emit 'named_capture("id", one_or_more(set(ascii.digit)))' --dialect rust-rege
 exist as limited compatibility targets, primarily to exercise explicit
 unsupported-feature diagnostics.
 
+## TypeScript Alpha
+
+The `packages/rx` workspace package provides the first TypeScript facade backed
+by the Rust core compiled to WASM:
+
+```ts
+import { rx, toRegex } from "@rx-lang/rx";
+
+const pathPiece = rx.oneOrMore(
+  rx.oneOf(
+    rx.alphaNumeric(),
+    rx.char("/"),
+    rx.char("."),
+    rx.char("-"),
+    rx.char("_"),
+  ),
+);
+
+console.log(await toRegex(pathPiece)); // [A-Za-z0-9/._-]+
+```
+
+Node and Bun use a dedicated package export that loads the Rust WASM through the
+non-experimental `wasm-pack` Node target:
+
+```ts
+import { rx, toRegexSync } from "@rx-lang/rx/node";
+
+const pathPiece = rx.oneOrMore(rx.oneOf(rx.alphaNumeric(), rx.char("/")));
+
+console.log(toRegexSync(pathPiece)); // [A-Za-z0-9/]+
+```
+
+Build it locally with:
+
+```sh
+cd packages/rx
+pnpm install
+pnpm build
+```
+
+`pnpm build` generates both browser/bundler and Node/Bun WASM bindings. It
+requires `wasm-pack` and a Rust toolchain with `wasm32-unknown-unknown`
+installed.
+
 ## Diagnostics
 
 Runtime parsing and emission errors are structured. Diagnostics include source
@@ -176,7 +220,7 @@ Deferred beyond `0.1.0`:
 - Full dialect support beyond Rust regex.
 - Full legacy regex compatibility representation.
 - LSP/editor integration.
-- WASM, TypeScript, npm, and playground surfaces.
+- Stable npm publishing, Node-native acceleration, and playground surfaces.
 
 ## Crates
 
@@ -185,6 +229,9 @@ Deferred beyond `0.1.0`:
   explanation, behavior checks, and migration suggestions.
 - `rx-macros`: compile-time readable regex macros.
 - `rx-cli`: command-line workflows.
+- `rx-wasm`: WASM command wrapper over `rx-core` for TypeScript/web surfaces.
+- `packages/rx`: TypeScript facade and npm package scaffold backed by
+  `rx-wasm`.
 
 The crates.io package names for the library crates are `rx-lang`,
 `rx-lang-core`, and `rx-lang-macros`; the Rust crate names remain `rx`,
