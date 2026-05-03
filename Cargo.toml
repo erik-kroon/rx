@@ -4,6 +4,7 @@ members = [
     "crates/rx-cli",
     "crates/rx-core",
     "crates/rx-macros",
+    "crates/rx-wasm",
 ]
 resolver = "2"
 

@@ -59,35 +59,46 @@ The next product milestone should deepen the legacy-to-readable workflow:
 - Add fuzz/property coverage around legacy parsing, readable parsing, and
   emission safety.
 
-## 0.3 Playground
+## 0.3 TypeScript/npm Package
 
-Start the web playground only after the kernel contracts are stable enough to
-reuse directly:
+The next surface is a reusable TypeScript package. This comes before the
+playground so TypeScript application development, playground work, docs
+examples, and future editor/webview integrations all share one boundary.
 
-- Compile the shared core to a playground-friendly boundary.
-- Follow [ADR 0004](adr/0004-wasm-typescript-distribution.md): add a thin
-  `rx-wasm` command wrapper and a TypeScript-native npm facade instead of raw
-  generated bindings or a TypeScript reimplementation.
+Implemented first slice:
+
+- `crates/rx-wasm` exists as a thin command wrapper over `rx-core`.
+- `packages/rx` exists as the TypeScript facade over `rx-wasm`.
+- Command-shaped APIs are exposed: `explainRegex`, `lintRegex`, `parseRegex`,
+  `emitRx`, and `formatRx`.
+- TypeScript result and diagnostic types mirror the shared core diagnostic
+  contract.
+- TypeScript builders can express readable composition such as `oneOrMore`,
+  `oneOf`, `alphaNumeric`, and `char`, then delegate regex emission to
+  Rust/WASM.
+- The package builds separate browser/bundler and Node/Bun WASM targets so
+  Node and Bun avoid experimental WASM module imports and can use sync APIs.
+
+Remaining package work:
+
+- Add JSON-compatible AST transport once TS needs to preserve richer builder
+  metadata than readable rx strings can express.
+- Add fuller browser bundler, Node, and Bun examples.
+- Add Vitest coverage that runs the generated WASM commands, not just builder
+  serialization.
+- Defer a NAPI package until Node-heavy usage justifies it and the universal API
+  shape is stable.
+
+## 0.4 Playground
+
+Start the web playground after the TypeScript/npm package exists:
+
+- Use the published package boundary instead of a playground-only WASM wrapper.
 - Show raw regex, readable rx, explanation, warnings, generated Rust, and
   generated regex from the same analysis path used by CLI/library code.
 - Keep unsupported compatibility constructs explicit rather than approximated.
-
-## 0.4 TypeScript/npm Package
-
-After the playground-facing WASM boundary is stable, publish a reusable npm
-package:
-
-- Create `packages/rx` as the TypeScript facade over `rx-wasm`.
-- Expose command-shaped APIs first: `explainRegex`, `lintRegex`, `parseRegex`,
-  `emitRx`, and `formatRx`.
-- Add TypeScript result and diagnostic types that mirror the shared core
-  diagnostic contract.
-- Add a TypeScript builder that produces JSON-compatible input and delegates
-  validation, normalization, linting, emission, pretty-printing, and explanation
-  to Rust/WASM.
-- Add browser bundler and Node examples.
-- Defer a NAPI package until Node-heavy usage justifies it and the universal API
-  shape is stable.
+- Feed missing playground needs back into the package API instead of adding
+  surface-specific parser or formatter behavior.
 
 ## Later: Editor Integration
 

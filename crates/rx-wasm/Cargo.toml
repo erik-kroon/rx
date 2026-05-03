@@ -1,0 +1,18 @@
+[package]
+name = "rx-lang-wasm"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "WASM command wrapper for the rx readable regex core"
+
+[lib]
+name = "rx_wasm"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+console_error_panic_hook = "0.1"
+rx-core = { package = "rx-lang-core", version = "0.1.0", path = "../rx-core" }
+serde = { version = "1", features = ["derive"] }
+serde-wasm-bindgen = "0.6"
+wasm-bindgen = "0.2"
