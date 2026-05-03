@@ -50,11 +50,12 @@
     }
   },
   "scripts": {
-    "build": "pnpm build:wasm && pnpm build:ts",
+    "build": "pnpm check:deps && pnpm build:wasm && pnpm build:ts",
     "build:ts": "tsup src/index.ts src/node.ts src/builders.ts --format esm --dts",
     "build:wasm": "pnpm build:wasm:browser && pnpm build:wasm:node",
     "build:wasm:browser": "PATH=\"$HOME/.cargo/bin:$PATH\" wasm-pack build ../../crates/rx-wasm --target bundler --out-dir ../../packages/rx/wasm --out-name rx_wasm",
     "build:wasm:node": "PATH=\"$HOME/.cargo/bin:$PATH\" wasm-pack build ../../crates/rx-wasm --target nodejs --out-dir ../../packages/rx/wasm-node --out-name rx_wasm",
+    "check:deps": "node -e \"try{require.resolve('tsup')}catch{console.error('Missing package dependencies. Run pnpm install in packages/rx before build, pack, or publish.');process.exit(1)}\"",
     "prepack": "pnpm build",
     "smoke:bun": "bun --eval 'import { rx, toRegexSync } from \"@rx-lang/rx\"; console.log(toRegexSync(rx.oneOrMore(rx.oneOf(rx.alphaNumeric(), rx.char(\"/\")))));'",
     "smoke:node": "node --input-type=module --eval 'import { rx, toRegexSync } from \"@rx-lang/rx\"; console.log(toRegexSync(rx.oneOrMore(rx.oneOf(rx.alphaNumeric(), rx.char(\"/\")))));'",

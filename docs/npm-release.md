@@ -16,7 +16,7 @@ This checklist covers publishing `@rx-lang/rx`.
 Run from `packages/rx`:
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm exec tsc --noEmit
 pnpm test
 pnpm smoke:node
@@ -25,8 +25,10 @@ pnpm pack --dry-run
 pnpm publish --dry-run --access public --no-git-checks
 ```
 
-`pnpm test` builds both WASM targets before running Vitest. The package requires
-`wasm-pack` and the Rust `wasm32-unknown-unknown` target:
+Run `pnpm install --frozen-lockfile` before `pnpm build`, `pnpm pack`, or
+`pnpm publish`; package lifecycle scripts do not install dev dependencies for
+you. `pnpm test` builds both WASM targets before running Vitest. The package
+requires `wasm-pack` and the Rust `wasm32-unknown-unknown` target:
 
 ```sh
 rustup target add wasm32-unknown-unknown
